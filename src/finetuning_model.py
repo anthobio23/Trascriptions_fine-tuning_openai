@@ -1,7 +1,7 @@
 #!/usr/bin/activate
 
 import openai
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 
 class FineTuningModel:

@@ -1020,6 +1020,7 @@ ENV/
 env.bak/
 venv.bak/
 outputs
+database/Trascripciones.txt
 
 # Spyder project settings
 .spyderproject
