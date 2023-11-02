@@ -9,8 +9,13 @@ class ProcessModelText(object):
 	def __init__(self, model: str = 'davinci'):
 		self.model = model
 		self.tuning_model = FineTuningModel(model=model)
+		
+		with open('templates/prompt_template.txt', 'r') as target:
+			template = target.read()
+			self.template = template.replace('\n', '')
+			
 		self.get_prompt()
-	
+		
 	def use_model(self, prompt: str, id_model_finetuned: str = None):
 		response = self.tuning_model.use_model_finetuned(
 				id_model_finetuned=id_model_finetuned,
@@ -41,13 +46,19 @@ class ProcessModelText(object):
 		if train in ['Y', 'y']:
 			id_fine_tuning = self.load_data_to_openai()
 		print("Bienvenido al asistente generador de guion, en que puedo ayudarte: ")
+		train = input("quieres leer un archivo para usarlo commo prompt? Y/n: ")
+		if train in ["Y", "y"]:
+			answer = self.use_model(self.template)
+			print("\n-----------------------------------\n")
+			print(answer)
+			print("\n-----------------------------------\n")
+			print(f"Cantidad de palabras: {len(answer.split())}\n")
 		while True:
 			prompt = input('?> ')
 			if prompt.lower() == 'exit':
 				print('Gracias por usar al asistente, espero haberte ayudado. \nExiting...')
 				break
 			try:
-				# question = QUERY.format(question=prompt)
 				try:
 					assert 'id_fine_tuning' in locals()
 				except AssertionError:

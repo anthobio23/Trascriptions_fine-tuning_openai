@@ -16,25 +16,30 @@ def match_parrafo(msg: str):
 		replace('ü', 'u')
 	msg = msg.replace('\n', ' ')
 	msg = re.sub(r'[¿?"\'&@!¡]', '', msg)
-	text = msg.split('Trascripcion ')
-	#rc = re.compile(r"trascripcion \d:\.", flags=re.IGNORECASE)
-	#text = msg.split(r"trascrip\w* \d:")
-	return text
+	# text = msg.split('Trascripcion ')
+	
+	return msg
 
 
-if __name__ == '__main__':
-	with open('../database/Trascripciones.txt', 'r') as target:
-		data = target.read()
+def text_to_json(text: str):
 	
-	data = match_parrafo(data)
+	text = match_parrafo(text)
 	
-	with open('../database/fine_tuned_data.jsonl', 'w') as target:
-		for n, i in enumerate(data):
+	with open('../database/fine_tuned_data.jsonl', 'w') as file:
+		for n, i in enumerate(text):
+			# data para modelo davinci
 			json_line = json.dumps(
 				{
 					"prompt": f"genera texto con la misma gramatica, tono de redaccion y estilo para esta transcripcion {n}",
 					"completion": f"{i}"
 				}
 			)
-			target.write(json_line + '\n')
-		
+			file.write(json_line + '\n')
+
+
+if __name__ == '__main__':
+	# data de texto en crudo
+	with open('../database/Trascripciones.txt', 'r') as target:
+		data = target.read()
+	text_to_json(text=data)
+	
